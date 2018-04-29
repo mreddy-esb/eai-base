@@ -1,0 +1,130 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0                              http://maven.apache.org/maven-v4_0_0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <groupId>com.mycompany</groupId>
+    <artifactId>eai-base</artifactId>
+    <packaging>pom</packaging>
+    <version>1.0.0</version>
+    <name>Parent POM for all EAI projects</name>
+    <properties>
+        <username>mreddy-esb</username>
+        <password>Ritdumdig1</password>
+        <skipDeployment>false</skipDeployment>
+    </properties>
+    <build>
+        <pluginManagement>
+            <plugins>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-compiler-plugin</artifactId>
+                    <configuration>
+                        <source>1.5</source>
+                        <target>1.5</target>
+                    </configuration>
+                </plugin>
+
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-release-plugin</artifactId>
+                    <version>2.5.3</version>
+                    <dependencies>
+                        <dependency>
+                            <groupId>org.apache.maven.scm</groupId>
+                            <artifactId>maven-scm-provider-gitexe</artifactId>
+                            <version>1.9.5</version>
+                        </dependency>
+                    </dependencies>
+                </plugin>
+
+            </plugins>
+        </pluginManagement>
+
+        <plugins>
+            <plugin>
+                <groupId>org.mule.tools.maven</groupId>
+                <artifactId>mule-maven-plugin</artifactId>
+                <version>2.0</version>
+                <configuration>
+                    <deploymentType>arm</deploymentType>
+                    <username>${username}</username>
+                    <password>${password}</password>
+                    <target>${target}</target>
+                    <targetType>${targetType}</targetType>        <!-- One of: server, serverGroup, cluster -->
+                    <environment>${environment}</environment>
+                    <url>https://anypoint.mulesoft.com</url>
+                    <skip>${skipDeployment}</skip>
+                </configuration>
+                <executions>
+                    <execution>
+                        <id>deploy</id>
+                        <phase>deploy</phase>
+                        <goals>
+                            <goal>deploy</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+    </build>
+
+    <distributionManagement>
+        <repository>
+            <id>LocalReleases</id>
+            <!-- nexus -->
+            <url>http://localhost:8081/nexus/content/repositories/releases/</url>
+        </repository>
+        <snapshotRepository>
+            <id>LocalSnapshots</id>
+            <url>http://localhost:8081/nexus/content/repositories/snapshots/</url>
+        </snapshotRepository>
+    </distributionManagement>
+
+    <profiles>
+        <profile>
+            <id>Sandbox</id>
+            <activation>
+                <activeByDefault>true</activeByDefault>
+                <property>
+                    <name>env</name>
+                    <value>Sandbox</value>
+                </property>
+            </activation>
+            <properties>
+                <environment>Sandbox</environment>
+                <target>myLocalServer</target>
+                <targetType>server</targetType>
+            </properties>
+        </profile>
+        <!-- <profile>
+            <id>QA</id>
+            <activation>
+                <property>
+                    <name>env</name>
+                    <value>QA</value>65 
+                </property>
+            </activation>
+            <properties>
+                <environment>QA</environment>
+                <target>myLocalQAServer</target>
+                <targetType>server</targetType>
+            </properties>
+        </profile> -->
+        <!-- <profile>
+            <id>UAT</id>
+            <activation>
+                <property>
+                    <name>env</name>
+                    <value>UAT</value>
+                </property>
+            </activation>
+            <properties>
+                <environment>UAT</environment>
+                <target>UAT-Cluster</target>
+                <targetType>cluster</targetType>
+            </properties>
+        </profile>     -->    
+
+    </profiles>
+
+
+</project>
